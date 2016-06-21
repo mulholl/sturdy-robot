@@ -1,0 +1,16 @@
+Things to consider:
+	Function to give command line priority
+	Function to give file priority
+	Function to give equal priority
+
+	Default values
+
+	Read in multiple arguments for the same option
+
+	Specify a required number of arguments (minimum, maximum, exact?)
+	Argument-free options
+
+	Options to be hidden from the help menu?
+	Options to be specified only in the file
+
+	Deal with options that have the following argument types: int, unsigned int, double, long, string, vectors of these types, matrices

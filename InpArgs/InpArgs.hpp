@@ -5,6 +5,7 @@
 #include <vector>
 #include <tuple>
 #include "ValidArgs.hpp"
+#include "InpArgsClass.hpp"
 
 // template <typename T>
 // bool checkInpArg(std::string &s1, T val, int argc, char *argv[]){

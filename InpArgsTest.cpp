@@ -8,11 +8,11 @@ int main(int argc, char *argv[]){
 	vector< vector<int> > M;
 	vector<string> args;
 
-	ValidArgs VA;
+	InpArgsClass IA(argc, argv);
 
-	VA.addArg('h', "help", "Print this help message");
+	IA.addArg('h', "help", "Print this help message");
 
-	cout << VA.listArgs() << endl;
+	cout << IA.listArgs() << endl;
 
 	// argVector(argc, argv, args);
 

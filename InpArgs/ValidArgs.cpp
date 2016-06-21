@@ -8,13 +8,11 @@ void ValidArgs::addArg(char c, string s, string h){
 }
 
 void ValidArgs::addArg(char c, string h){
-	tuple<char, string, string> tup (c, "", h);
-	argList.push_back(tup);
+	addArg(c, "\0", h);
 }
 
 void ValidArgs::addArg(string s, string h){
-	tuple<char, string, string> tup ('\0', s, h);
-	argList.push_back(tup);
+	addArg('\0', s, h);
 }
 
 bool ValidArgs::isValidArg(char c){
