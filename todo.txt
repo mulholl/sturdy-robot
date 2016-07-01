@@ -14,3 +14,6 @@ Things to consider:
 	Options to be specified only in the file
 
 	Deal with options that have the following argument types: int, unsigned int, double, long, string, vectors of these types, matrices
+
+	Deal with cases where the same option is specified multiple times (probably throw an exception and quit)
+	Deal with cases where an option is not recognised

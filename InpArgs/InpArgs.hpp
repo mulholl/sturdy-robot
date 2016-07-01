@@ -6,6 +6,8 @@
 #include <tuple>
 #include "ValidArgs.hpp"
 #include "InpArgsClass.hpp"
+#include "InpArgsExceptions.hpp"
+#include "InpArgsValue.hpp"
 
 // template <typename T>
 // bool checkInpArg(std::string &s1, T val, int argc, char *argv[]){
