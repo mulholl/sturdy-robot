@@ -14,6 +14,6 @@
 
 // }
 
-bool argVector(int , char **, std::vector<std::string> &);
+// bool argVector(int , char **, std::vector<std::string> &);
 
 #endif

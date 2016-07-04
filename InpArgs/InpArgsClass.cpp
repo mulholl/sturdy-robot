@@ -40,6 +40,8 @@ namespace inpargs{
 
 		bool ret;
 
+		// cout << "mode = " << mode <<endl;
+
 		if (mode == INP_ARG_CMD_ONLY){
 			ret = checkCmdArg(opt_short, opt_long, val);
 		}
@@ -80,6 +82,7 @@ namespace inpargs{
 		string opt_short_str(1, opt_short);
 
 		for (vector<string>::iterator it = cmdOpts.begin(); it < cmdOpts.end(); ++it){
+			// cout << "opt_short = " << opt_short << " | opt_long = " << opt_long << " | *it = " << *it << endl;
 			if (opt_short_str.compare(*it) == 0 || opt_long.compare(*it) == 0){
 				val = *(cmdArgs.begin() + distance(cmdOpts.begin(), it));
 				return true;
@@ -109,7 +112,7 @@ namespace inpargs{
 			return false;
 		}
 		else {
-			for (vector< tuple<char, string, string, unsigned int, unsigned int> >::iterator it = validArgList.begin(); it != validArgList.end(); ++it){
+			for (vector< tuple<char, string, string, int, bool, int, bool> >::iterator it = validArgList.begin(); it != validArgList.end(); ++it){
 				if (opt_short == get<0>(*it)){
 					return true;
 				}
@@ -124,7 +127,7 @@ namespace inpargs{
 			return false;
 		}
 		else {
-			for (vector< tuple<char, string, string, unsigned int, unsigned int> >::iterator it = validArgList.begin(); it != validArgList.end(); ++it){
+			for (vector< tuple<char, string, string, int, bool, int, bool> >::iterator it = validArgList.begin(); it != validArgList.end(); ++it){
 				if (opt_long.compare(get<1>(*it))){
 					return true;
 				}
@@ -135,13 +138,58 @@ namespace inpargs{
 	}
 
 	string InpArgsClass::listArgs(){
+		string str = "";
 		string opt_long = "";
 
-		for (vector< tuple<char, string, string, unsigned int, unsigned int> >::iterator it = validArgList.begin(); it != validArgList.end(); ++it){
-			opt_long = opt_long + "  -" + get<0>(*it) + "    --" + get<1>(*it) + "        " + get<2>(*it) + "\n"; 
+		string argInfo;
+		string valInfo;
+
+		const unsigned int alignTo = 20;
+
+		for (vector< tuple<char, string, string, int, bool, int, bool> >::iterator it = validArgList.begin(); it != validArgList.end(); ++it){
+			opt_long = "";
+			opt_long = opt_long + "  -" + get<0>(*it) + "    --" + get<1>(*it);
+			unsigned int tempSize = opt_long.size();
+
+			// cout << "tempSize = " << tempSize << endl;
+			// cout << "alignTo = " << alignTo << endl;
+			// cout << "opt_long = " << opt_long << "END" << endl;
+			// cout << "alignTo - tempSize = " << alignTo - tempSize << endl;
+
+			for (unsigned int it = 0; it < alignTo - tempSize; ++it){
+				opt_long = opt_long + " ";
+			} 
+
+			opt_long = opt_long + get<2>(*it) + "\n";
+
+			argInfo = "";
+
+			for (unsigned int it = 0; it < alignTo; ++it){
+				argInfo = argInfo + " ";
+			} 
+
+			if (get<4>(*it) && get<6>(*it)){
+				if (get<3>(*it) == get<5>(*it)){
+					argInfo = argInfo + "Takes exactly " + to_string(get<3>(*it)) + " arguments.\n";
+				}
+				else {
+					argInfo = argInfo + "Takes " + to_string(get<3>(*it)) + "-" + to_string(get<5>(*it)) + " arguments.\n";
+				}
+			}
+			else if (get<4>(*it)){
+				argInfo = argInfo + "Takes at least " + to_string(get<3>(*it)) + " arguments.\n";
+			}
+			else if (get<6>(*it)){
+				argInfo = argInfo + "Takes up to " + to_string(get<5>(*it)) + " arguments.\n";
+			}
+			else {
+				argInfo = "";
+			}
+
+			str = str + opt_long + argInfo;
 		}
 
-		return opt_long;
+		return str;
 	}
 
 	InpArgsClass::InpArgsClass(int arg_c, char** arg_v){
@@ -155,7 +203,7 @@ namespace inpargs{
 		mode = INP_ARG_CMD_ONLY;
 
 		gatherCmdOpts();
-		printCmdOpts();
+		// printCmdOpts();
 
 	}
 
@@ -184,10 +232,10 @@ namespace inpargs{
 		}
 
 		gatherCmdOpts();
-		printCmdOpts();
+		// printCmdOpts();
 
 		gatherFileOpts();
-		printFileOpts();
+		// printFileOpts();
 
 	}
 
@@ -202,7 +250,7 @@ namespace inpargs{
 		mode = INP_ARG_FILE_ONLY;
 
 		gatherFileOpts();
-		printFileOpts();
+		// printFileOpts();
 
 	}
 
@@ -235,6 +283,8 @@ namespace inpargs{
 			/* Check if this string is an option - i.e., if it begins with '-' */
 			if (isCmdOption(current, temp_bool)){
 				cmdIsLong.push_back(temp_bool);
+				unsigned int i = temp_bool ? 2 : 1;
+				current.erase(current.begin(), current.begin()+i);
 				cmdOpts.push_back(current);
 
 				optInds.push_back(it);
@@ -281,6 +331,243 @@ namespace inpargs{
 		}
 	}
 
+	// void InpArgsClass::convertStrToBool(vector<string> &argsAsStrings, vector<bool> &argsAsBools){
+	// 	argsAsBools.resize(0);
+
+	// 	string upper;
+
+	// 	for (vector<string>::iterator it = argsAsStrings.begin(); it < argsAsStrings.end(); ++it){
+	// 		upper = strToUpper(*it);
+	// 		if (!upper.compare("Y") || !upper.compare("YES")  || !upper.compare("T") || !upper.compare("TRUE") || !upper.compare("ON")){
+	// 			argsAsBools.push_back(true);
+	// 		}
+	// 		else if (!upper.compare("N") || !upper.compare("NO") || !upper.compare("F") || !upper.compare("FALSE") || !upper.compare("OFF")){
+	// 			argsAsBools.push_back(false);
+	// 		}
+	// 		else {
+	// 			throw inpargs::BadBoolValue{ };
+	// 		}
+	// 	}		
+	// }
+
+	// void InpArgsClass::convertStrToChar(vector<string> &argsAsStrings, vector<bool> &argsAsChars){
+	// 	argsAsChars.resize(0);
+
+	// 	for (vector<string>::iterator it = argsAsStrings.begin(); it < argsAsStrings.end(); ++it){
+	// 		if ((*it).size() != 1){
+	// 			throw ExpectedChar{ };
+	// 		}
+	// 		else {
+	// 			argsAsChars.push_back((*it)[0]);
+	// 		}
+	// 	}
+	// }
+
+	// void convertStrToInt(vector<string> &argsAsStrings, vector<bool> &argsAsInts);
+	// void convertStrToUInt(vector<string> &argsAsStrings, vector<bool> &argsAsUInts);
+	// void convertStrToFloat(vector<string> &argsAsStrings, vector<bool> &argsAsFloats);
+	// void convertStrToDouble(vector<string> &argsAsStrings, vector<bool> &argsAsDoubles);	
+
+
+	void InpArgsClass::convert(std::vector<std::string> &argsAsStrings, std::vector<std::string> &argsAsCorrectType){
+		argsAsCorrectType = argsAsStrings;
+	}
+
+	void InpArgsClass::convert(std::vector<std::string> &argsAsStrings, std::vector<char> &argsAsCorrectType){
+		argsAsCorrectType.resize(0);
+
+		for (std::vector<std::string>::iterator it = argsAsStrings.begin(); it < argsAsStrings.end(); ++it){
+			if ((*it).size() != 1){
+				throw ExpectedChar{ };
+			}
+			else {
+				argsAsCorrectType.push_back((*it)[0]);
+			}
+		}
+	}			
+
+	void InpArgsClass::convert(std::vector<std::string> &argsAsStrings, std::vector<int> &argsAsCorrectType){
+		argsAsCorrectType.resize(0);
+
+		int val;
+
+		std::string::size_type sz;   // alias of size_t
+
+		for (std::vector<std::string>::iterator it = argsAsStrings.begin(); it < argsAsStrings.end(); ++it){
+			try {
+				val = std::stoi((*it), &sz);
+			}
+			catch (std::exception e){
+				std::cout << e.what() << std::endl;
+			}
+			argsAsCorrectType.push_back(val);
+		}
+	}
+
+	void InpArgsClass::convert(std::vector<std::string> &argsAsStrings, std::vector<long> &argsAsCorrectType){
+		argsAsCorrectType.resize(0);
+
+		long val;
+
+		std::string::size_type sz;   // alias of size_t
+
+		for (std::vector<std::string>::iterator it = argsAsStrings.begin(); it < argsAsStrings.end(); ++it){
+			try {
+				val = std::stol((*it), &sz);
+			}
+			catch (std::exception e){
+				std::cout << e.what() << std::endl;
+			}
+			argsAsCorrectType.push_back(val);
+		}
+	}
+
+	void InpArgsClass::convert(std::vector<std::string> &argsAsStrings, std::vector<long long> &argsAsCorrectType){
+		argsAsCorrectType.resize(0);
+
+		long long val;
+
+		std::string::size_type sz;   // alias of size_t
+
+		for (std::vector<std::string>::iterator it = argsAsStrings.begin(); it < argsAsStrings.end(); ++it){
+			try {
+				val = std::stoll((*it), &sz);
+			}
+			catch (std::exception e){
+				std::cout << e.what() << std::endl;
+			}
+			argsAsCorrectType.push_back(val);
+		}
+	}
+
+	void InpArgsClass::convert(std::vector<std::string> &argsAsStrings, std::vector<float> &argsAsCorrectType){
+		argsAsCorrectType.resize(0);
+
+		float val;
+
+		std::string::size_type sz;   // alias of size_t
+
+		for (std::vector<std::string>::iterator it = argsAsStrings.begin(); it < argsAsStrings.end(); ++it){
+			try {
+				val = std::stof((*it), &sz);
+			}
+			catch (std::exception e){
+				std::cout << e.what() << std::endl;
+			}
+			argsAsCorrectType.push_back(val);
+		}
+	}
+
+	void InpArgsClass::convert(std::vector<std::string> &argsAsStrings, std::vector<double> &argsAsCorrectType){
+		argsAsCorrectType.resize(0);
+
+		double val;
+
+		std::string::size_type sz;   // alias of size_t
+
+		for (std::vector<std::string>::iterator it = argsAsStrings.begin(); it < argsAsStrings.end(); ++it){
+			try {
+				val = std::stod((*it), &sz);
+			}
+			catch (std::exception e){
+				std::cout << e.what() << std::endl;
+			}
+			argsAsCorrectType.push_back(val);
+		}
+	}		
+
+	void InpArgsClass::convert(std::vector<std::string> &argsAsStrings, std::vector<long double> &argsAsCorrectType){
+		argsAsCorrectType.resize(0);
+
+		long double val;
+
+		std::string::size_type sz;   // alias of size_t
+
+		for (std::vector<std::string>::iterator it = argsAsStrings.begin(); it < argsAsStrings.end(); ++it){
+			try {
+				val = std::stold((*it), &sz);
+			}
+			catch (std::exception e){
+				std::cout << e.what() << std::endl;
+			}
+			argsAsCorrectType.push_back(val);
+		}
+	}
+
+	void InpArgsClass::convert(std::vector<std::string> &argsAsStrings, std::vector<unsigned int> &argsAsCorrectType){
+		argsAsCorrectType.resize(0);
+
+		unsigned int val;
+
+		std::string::size_type sz;   // alias of size_t
+
+		for (std::vector<std::string>::iterator it = argsAsStrings.begin(); it < argsAsStrings.end(); ++it){
+			try {
+				val = std::stoul((*it), &sz);
+			}
+			catch (std::exception e){
+				std::cout << e.what() << std::endl;
+			}
+			argsAsCorrectType.push_back(val);
+		}
+	}			
+
+	void InpArgsClass::convert(std::vector<std::string> &argsAsStrings, std::vector<unsigned long> &argsAsCorrectType){
+		argsAsCorrectType.resize(0);
+
+		unsigned long val;
+
+		std::string::size_type sz;   // alias of size_t
+
+		for (std::vector<std::string>::iterator it = argsAsStrings.begin(); it < argsAsStrings.end(); ++it){
+			try {
+				val = std::stoul((*it), &sz);
+			}
+			catch (std::exception e){
+				std::cout << e.what() << std::endl;
+			}
+			argsAsCorrectType.push_back(val);
+		}
+	}
+
+	void InpArgsClass::convert(std::vector<std::string> &argsAsStrings, std::vector<unsigned long long> &argsAsCorrectType){
+		argsAsCorrectType.resize(0);
+
+		unsigned long long val;
+
+		std::string::size_type sz;   // alias of size_t
+
+		for (std::vector<std::string>::iterator it = argsAsStrings.begin(); it < argsAsStrings.end(); ++it){
+			try {
+				val = std::stoull((*it), &sz);
+			}
+			catch (std::exception e){
+				std::cout << e.what() << std::endl;
+			}
+			argsAsCorrectType.push_back(val);
+		}
+	}	
+
+	void InpArgsClass::convert(std::vector<std::string> &argsAsStrings, std::vector<bool> &argsAsCorrectType){
+		argsAsCorrectType.resize(0);
+
+		std::string upper;
+
+		for (std::vector<std::string>::iterator it = argsAsStrings.begin(); it < argsAsStrings.end(); ++it){
+			upper = strToUpper(*it);
+			if (!upper.compare("Y") || !upper.compare("YES")  || !upper.compare("T") || !upper.compare("TRUE") || !upper.compare("ON")){
+				argsAsCorrectType.push_back(true);
+			}
+			else if (!upper.compare("N") || !upper.compare("NO") || !upper.compare("F") || !upper.compare("FALSE") || !upper.compare("OFF")){
+				argsAsCorrectType.push_back(false);
+			}
+			else {
+				throw inpargs::BadBoolValue{ };
+			}
+		}		
+	}
+
+
 	string InpArgsClass::strToUpper(string str){
 		string str2 = str;
 		unsigned int len = str.length();
@@ -292,7 +579,7 @@ namespace inpargs{
 		return str2;
 	}
 
-	/* trimLWSpace(std::string &str) trims any whitespace at the beginning of str */
+	/* trimLWSpace(string &str) trims any whitespace at the beginning of str */
 	void InpArgsClass::trimLWSpace(string &str){
 		locale loc;
 		unsigned int str_len = str.length();
@@ -306,7 +593,7 @@ namespace inpargs{
 		str = str.substr(it, str_len - it);
 	}
 
-	/* trimLWSpace(std::string &str) trims any whitespace at the end of str */
+	/* trimLWSpace(string &str) trims any whitespace at the end of str */
 	void InpArgsClass::trimRWSpace(string &str){
 		locale loc;
 		unsigned int str_len = str.length();
@@ -326,7 +613,7 @@ namespace inpargs{
 		// cout << "str is now = " << str << endl;
 	}
 
-	/* splitAtFirstWs(std::string &str1) splits str1 in two at the first whitespace character. The return value is everything up to this character, str1 is modified to be everything after this character. Leading whitespace is trimmed from str1 before and after the split */
+	/* splitAtFirstWs(string &str1) splits str1 in two at the first whitespace character. The return value is everything up to this character, str1 is modified to be everything after this character. Leading whitespace is trimmed from str1 before and after the split */
 	string InpArgsClass::splitAtFirstWS(string &str1){
 		locale loc;
 		string str2 = "";
@@ -379,7 +666,7 @@ namespace inpargs{
 		while(getline(ifs, current_line)){
 			// cout << "current_line = \n" << current_line << endl;
 			trimLWSpace(current_line);
-			cout << "current_line = \n" << current_line << endl;
+			// cout << "current_line = \n" << current_line << endl;
 
 			/* If this line is empty, move on to the next one */
 			if (current_line.length() == 0){
@@ -395,7 +682,7 @@ namespace inpargs{
 			else if (current_line[0] == '['){
 				ind = current_line.find(']');
 				category = current_line.substr(1, ind - 1);
-				cout << "category is [" << category << "]" << endl;
+				// cout << "category is [" << category << "]" << endl;
 			}
 			/* Otherwise, we consider this line to specify an option. We check for an equals sign and let everything before it (excluding any trailing whitespace) be the option */
 			else {

@@ -119,6 +119,71 @@ namespace inpargs {
 	class OutsideRange{
 
 	};
+
+	class CannotConvert { };
+
+	class VecInUse{ };
+	class VecNotInUse{ };
+	class NeedToUseVector{
+		public:
+			virtual const char* what() const throw(){
+				std::string msg = "The arguments provided were valid but cannot be stored in a single variable as required.\n";
+				return msg.c_str();
+			}		
+	};
+	class BadBoolValue{
+		public:
+			virtual const char* what() const throw(){
+				std::string msg = "Invalid argument passed for an option which takes only boolean arguments.\n";
+				return msg.c_str();
+			}	
+	};
+	class ExpectedChar{
+		public:
+			virtual const char* what() const throw(){
+				std::string msg = "Invalid argument passed for an option which takes only char arguments.\n";
+				return msg.c_str();
+			}	
+	};
+
+	/* Exceptions for cases where the numbers of allowed arguments are not consistent */
+	class MaxArgsLessThanMinArgs{
+		public:
+			virtual const char* what() const throw(){
+				std::string msg = "The specified maximum number of arguments is less than the specified minimum number of arguments.\n";
+				return msg.c_str();
+			}
+	};
+
+	/* Exceptions for cases where the default value is not one of the specified acceptable values */
+	class MaxLessThanDefault{
+		public:
+			virtual const char* what() const throw(){
+				std::string msg = "The specified maximum value is less than the previously specified default value.\n";
+				return msg.c_str();
+			}
+	};		
+	class MinGreaterThanDefault{
+		public:
+			virtual const char* what() const throw(){
+				std::string msg = "The specified minimum value is greater than the previously specified default value.\n";
+				return msg.c_str();
+			}
+	};	
+	class ListDoesNotContainDefault{
+		public:
+			virtual const char* what() const throw(){
+				std::string msg = "The specified list of acceptable values does not contain the previously specified default value.\n";
+				return msg.c_str();
+			}
+	};		
+	class DefaultOutsideRange{
+		public:
+			virtual const char* what() const throw(){
+				std::string msg = "The specified default value lies outside the previously specified range/list of valid values.\n";
+				return msg.c_str();
+			}
+	};	
 	class NotInList{
 
 	};
