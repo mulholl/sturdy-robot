@@ -1,9 +1,9 @@
-#include "InpArgsClass.hpp"
+#include "InpOptsClass.hpp"
 
 using namespace std;
 
-namespace inpargs{
-	bool InpArgsClass::isCmdOption(const string str, bool &ls){
+namespace inpopts{
+	bool InpOptsClass::isCmdOption(const string str, bool &ls){
 		unsigned int str_len = str.length();
 		ls = false;
 		
@@ -51,13 +51,13 @@ namespace inpargs{
 		return false;
 	}
 
-	bool InpArgsClass::isCmdOption(const string str){
+	bool InpOptsClass::isCmdOption(const string str){
 		bool temp_bool;
 
 		return isCmdOption(str, temp_bool);
 	}
 
-	bool InpArgsClass::checkOpt(const char opt_short, const string opt_long, vector<string> &val, const bool updateCounters){
+	bool InpOptsClass::checkOpt(const char opt_short, const string opt_long, vector<string> &val, const bool updateCounters){
 
 		vector<string> cmdVal;
 		vector<string> fileVal;
@@ -72,7 +72,7 @@ namespace inpargs{
 						++numRecognizedCmdOpts;
 					}
 					else {
-						throw inpargs::MultCmdSpec(opt_short, opt_long);
+						throw inpopts::MultCmdSpec(opt_short, opt_long);
 					}
 				}
 			}
@@ -82,7 +82,7 @@ namespace inpargs{
 						++numRecognizedCmdOpts;
 					}
 					else {
-						throw inpargs::MultCmdSpec(opt_short, opt_long);
+						throw inpopts::MultCmdSpec(opt_short, opt_long);
 					}
 				}
 				else if (ret = checkFileOpt(opt_short, opt_long, val)){
@@ -90,7 +90,7 @@ namespace inpargs{
 						++numRecognizedFileOpts;
 					}
 					else {
-						throw inpargs::MultFileSpec(opt_short, opt_long);
+						throw inpopts::MultFileSpec(opt_short, opt_long);
 					}
 				}
 			}
@@ -100,7 +100,7 @@ namespace inpargs{
 						++numRecognizedFileOpts;
 					}
 					else {
-						throw inpargs::MultFileSpec(opt_short, opt_long);
+						throw inpopts::MultFileSpec(opt_short, opt_long);
 					}
 				}
 			}
@@ -110,7 +110,7 @@ namespace inpargs{
 						++numRecognizedFileOpts;
 					}
 					else {
-						throw inpargs::MultFileSpec(opt_short, opt_long);
+						throw inpopts::MultFileSpec(opt_short, opt_long);
 					}
 				}
 				else if (ret = checkCmdOpt(opt_short, opt_long, val)){
@@ -118,7 +118,7 @@ namespace inpargs{
 						++numRecognizedCmdOpts;
 					}
 					else {
-						throw inpargs::MultCmdSpec(opt_short, opt_long);
+						throw inpopts::MultCmdSpec(opt_short, opt_long);
 					}
 				}
 			}
@@ -153,7 +153,7 @@ namespace inpargs{
 		return ret;
 	}
 
-	unsigned int InpArgsClass::checkCmdOpt(const char opt_short, const string opt_long, vector<string> &val){
+	unsigned int InpOptsClass::checkCmdOpt(const char opt_short, const string opt_long, vector<string> &val){
 		unsigned int count = 0;
 
 		string opt_short_str(1, opt_short);
@@ -182,7 +182,7 @@ namespace inpargs{
 		return count;
 	}
 
-	unsigned int InpArgsClass::checkFileOpt(const char opt_short, const string opt_long, vector<string> &val){
+	unsigned int InpOptsClass::checkFileOpt(const char opt_short, const string opt_long, vector<string> &val){
 		unsigned int count = 0;
 
 		string opt_short_str(1, opt_short);
@@ -201,7 +201,7 @@ namespace inpargs{
 		return count;
 	}
 
-	string InpArgsClass::listArgs(){
+	string InpOptsClass::listArgs(){
 		string str = "";
 		string opt_long = "";
 
@@ -251,18 +251,18 @@ namespace inpargs{
 		return str;
 	}
 
-	bool InpArgsClass::Used(const char c){
+	bool InpOptsClass::Used(const char c){
 		vector<string> temp;
 		return checkOpt(c, "", temp, false);
 	}
 
-	bool InpArgsClass::Used(const string str){
+	bool InpOptsClass::Used(const string str){
 		vector<string> temp;
 		const char c = '\0';
 		return checkOpt(c, str, temp, false);
 	}
 
-	string InpArgsClass::Priority(){
+	string InpOptsClass::Priority(){
 		if (mode == INP_ARG_CMD_ONLY){
 			return "CO";
 		}
@@ -283,7 +283,7 @@ namespace inpargs{
 		}
 	}
 
-	void InpArgsClass::UnrecognizedOpts(string &str){
+	void InpOptsClass::UnrecognizedOpts(string &str){
 		bool cmd = false;
 		bool file = false;
 		string str1 = "";
@@ -323,12 +323,12 @@ namespace inpargs{
 		}
 
 		if (cmd || file){
-			throw inpargs::UnrecOpts(str);
+			throw inpopts::UnrecOpts(str);
 		}
 
 	}
 
-	string InpArgsClass::UnrecognizedOpts(){
+	string InpOptsClass::UnrecognizedOpts(){
 		string str;
 
 		UnrecognizedOpts(str);
@@ -336,7 +336,7 @@ namespace inpargs{
 		return str;
 	}
 
-	InpArgsClass::InpArgsClass(const int arg_c, char** arg_v){
+	InpOptsClass::InpOptsClass(const int arg_c, char** arg_v){
 		argc = arg_c;
 		argv = arg_v;
 		optionsFile.clear();
@@ -354,7 +354,7 @@ namespace inpargs{
 
 	}
 
-	InpArgsClass::InpArgsClass(const int arg_c, char** arg_v, const string options_file, string priority){
+	InpOptsClass::InpOptsClass(const int arg_c, char** arg_v, const string options_file, string priority){
 		argc = arg_c;
 		argv = arg_v;
 		optionsFile = options_file;
@@ -378,7 +378,7 @@ namespace inpargs{
 			mode = INP_ARG_EQUAL_PRIORITY;
 		}
 		else {
-			throw inpargs::BadPrioritySpec{ };
+			throw inpopts::BadPrioritySpec{ };
 		}
 
 		gatherCmdOpts();
@@ -389,7 +389,7 @@ namespace inpargs{
 
 	}
 
-	InpArgsClass::InpArgsClass(const string options_file){
+	InpOptsClass::InpOptsClass(const string options_file){
 		argc = 0;
 		optionsFile = options_file;
 		validArgList.clear();
@@ -416,7 +416,7 @@ namespace inpargs{
 			cmdIsLong, which specifies whether the option was a long or a short option
 		The validity of the options/arguments is not checked here. Each vector has identical length and corresponding indices.
 	*/
-	void InpArgsClass::gatherCmdOpts(){
+	void InpOptsClass::gatherCmdOpts(){
 		optInds.resize(0);
 		cmdNumArgs.resize(0);
 		cmdOpts.resize(0);
@@ -483,7 +483,7 @@ namespace inpargs{
 	}
 
 	/* This is just for testing - it prints all of the options provided at the command line and the associated arguments, whether or not they are valid */
-	void InpArgsClass::printCmdOpts(){
+	void InpOptsClass::printCmdOpts(){
 		cout << "Options/arguments provided at the command line:\n";
 		cout << "\tOPTION\t\tARGUMENTS\n";
 		for (unsigned int it = 0; it < cmdArgs.size(); ++it){
@@ -499,7 +499,7 @@ namespace inpargs{
 		}
 	}
 
-	// void InpArgsClass::convertStrToBool(vector<string> &argsAsStrings, vector<bool> &argsAsBools){
+	// void InpOptsClass::convertStrToBool(vector<string> &argsAsStrings, vector<bool> &argsAsBools){
 	// 	argsAsBools.resize(0);
 
 	// 	string upper;
@@ -513,12 +513,12 @@ namespace inpargs{
 	// 			argsAsBools.push_back(false);
 	// 		}
 	// 		else {
-	// 			throw inpargs::BadBoolValue{ };
+	// 			throw inpopts::BadBoolValue{ };
 	// 		}
 	// 	}		
 	// }
 
-	// void InpArgsClass::convertStrToChar(vector<string> &argsAsStrings, vector<bool> &argsAsChars){
+	// void InpOptsClass::convertStrToChar(vector<string> &argsAsStrings, vector<bool> &argsAsChars){
 	// 	argsAsChars.resize(0);
 
 	// 	for (vector<string>::iterator it = argsAsStrings.begin(); it < argsAsStrings.end(); ++it){
@@ -537,11 +537,11 @@ namespace inpargs{
 	// void convertStrToDouble(vector<string> &argsAsStrings, vector<bool> &argsAsDoubles);	
 
 
-	void InpArgsClass::convert(const vector<string> &argsAsStrings, vector<string> &argsAsCorrectType){
+	void InpOptsClass::convert(const vector<string> &argsAsStrings, vector<string> &argsAsCorrectType){
 		argsAsCorrectType = argsAsStrings;
 	}
 
-	void InpArgsClass::convert(const vector<string> &argsAsStrings, vector<char> &argsAsCorrectType){
+	void InpOptsClass::convert(const vector<string> &argsAsStrings, vector<char> &argsAsCorrectType){
 		argsAsCorrectType.resize(0);
 
 		for (vector<string>::const_iterator it = argsAsStrings.begin(); it < argsAsStrings.end(); ++it){
@@ -554,7 +554,7 @@ namespace inpargs{
 		}
 	}			
 
-	void InpArgsClass::convert(const vector<string> &argsAsStrings, vector<int> &argsAsCorrectType){
+	void InpOptsClass::convert(const vector<string> &argsAsStrings, vector<int> &argsAsCorrectType){
 		argsAsCorrectType.resize(0);
 
 		int val;
@@ -572,7 +572,7 @@ namespace inpargs{
 		}
 	}
 
-	void InpArgsClass::convert(const vector<string> &argsAsStrings, vector<long> &argsAsCorrectType){
+	void InpOptsClass::convert(const vector<string> &argsAsStrings, vector<long> &argsAsCorrectType){
 		argsAsCorrectType.resize(0);
 
 		long val;
@@ -590,7 +590,7 @@ namespace inpargs{
 		}
 	}
 
-	void InpArgsClass::convert(const vector<string> &argsAsStrings, vector<long long> &argsAsCorrectType){
+	void InpOptsClass::convert(const vector<string> &argsAsStrings, vector<long long> &argsAsCorrectType){
 		argsAsCorrectType.resize(0);
 
 		long long val;
@@ -608,7 +608,7 @@ namespace inpargs{
 		}
 	}
 
-	void InpArgsClass::convert(const vector<string> &argsAsStrings, vector<float> &argsAsCorrectType){
+	void InpOptsClass::convert(const vector<string> &argsAsStrings, vector<float> &argsAsCorrectType){
 		argsAsCorrectType.resize(0);
 
 		float val;
@@ -626,7 +626,7 @@ namespace inpargs{
 		}
 	}
 
-	void InpArgsClass::convert(const vector<string> &argsAsStrings, vector<double> &argsAsCorrectType){
+	void InpOptsClass::convert(const vector<string> &argsAsStrings, vector<double> &argsAsCorrectType){
 		argsAsCorrectType.resize(0);
 
 		double val;
@@ -644,7 +644,7 @@ namespace inpargs{
 		}
 	}		
 
-	void InpArgsClass::convert(const vector<string> &argsAsStrings, vector<long double> &argsAsCorrectType){
+	void InpOptsClass::convert(const vector<string> &argsAsStrings, vector<long double> &argsAsCorrectType){
 		argsAsCorrectType.resize(0);
 
 		long double val;
@@ -662,7 +662,7 @@ namespace inpargs{
 		}
 	}
 
-	void InpArgsClass::convert(const vector<string> &argsAsStrings, vector<unsigned int> &argsAsCorrectType){
+	void InpOptsClass::convert(const vector<string> &argsAsStrings, vector<unsigned int> &argsAsCorrectType){
 		argsAsCorrectType.resize(0);
 
 		unsigned int val;
@@ -680,7 +680,7 @@ namespace inpargs{
 		}
 	}			
 
-	void InpArgsClass::convert(const vector<string> &argsAsStrings, vector<unsigned long> &argsAsCorrectType){
+	void InpOptsClass::convert(const vector<string> &argsAsStrings, vector<unsigned long> &argsAsCorrectType){
 		argsAsCorrectType.resize(0);
 
 		unsigned long val;
@@ -698,7 +698,7 @@ namespace inpargs{
 		}
 	}
 
-	void InpArgsClass::convert(const vector<string> &argsAsStrings, vector<unsigned long long> &argsAsCorrectType){
+	void InpOptsClass::convert(const vector<string> &argsAsStrings, vector<unsigned long long> &argsAsCorrectType){
 		argsAsCorrectType.resize(0);
 
 		unsigned long long val;
@@ -716,7 +716,7 @@ namespace inpargs{
 		}
 	}	
 
-	void InpArgsClass::convert(const vector<string> &argsAsStrings, vector<bool> &argsAsCorrectType){
+	void InpOptsClass::convert(const vector<string> &argsAsStrings, vector<bool> &argsAsCorrectType){
 		argsAsCorrectType.resize(0);
 
 		string upper;
@@ -730,13 +730,13 @@ namespace inpargs{
 				argsAsCorrectType.push_back(false);
 			}
 			else {
-				throw inpargs::BadBoolValue{ };
+				throw inpopts::BadBoolValue{ };
 			}
 		}		
 	}
 
 
-	string InpArgsClass::strToUpper(const string str){
+	string InpOptsClass::strToUpper(const string str){
 		string str2 = str;
 		unsigned int len = str.length();
 
@@ -748,7 +748,7 @@ namespace inpargs{
 	}
 
 	/* trimLWSpace(string &str) trims any whitespace at the beginning of str */
-	void InpArgsClass::trimLWSpace(string &str){
+	void InpOptsClass::trimLWSpace(string &str){
 		locale loc;
 		unsigned int str_len = str.length();
 		unsigned int it;
@@ -762,7 +762,7 @@ namespace inpargs{
 	}
 
 	/* trimLWSpace(string &str) trims any whitespace at the end of str */
-	void InpArgsClass::trimRWSpace(string &str){
+	void InpOptsClass::trimRWSpace(string &str){
 		locale loc;
 		unsigned int str_len = str.length();
 		unsigned int it;
@@ -782,7 +782,7 @@ namespace inpargs{
 	}
 
 	/* splitAtFirstWs(string &str1) splits str1 in two at the first whitespace character. The return value is everything up to this character, str1 is modified to be everything after this character. Leading whitespace is trimmed from str1 before and after the split */
-	string InpArgsClass::splitAtFirstWS(string &str1){
+	string InpOptsClass::splitAtFirstWS(string &str1){
 		locale loc;
 		string str2 = "";
 
@@ -811,7 +811,7 @@ namespace inpargs{
 		return str2;
 	}
 
-	void InpArgsClass::gatherFileOpts(){
+	void InpOptsClass::gatherFileOpts(){
 		// optInds.resize(0);
 		fileNumArgs.resize(0);
 		fileOpts.resize(0);
@@ -829,7 +829,7 @@ namespace inpargs{
 		unsigned int ind;
 
 		if(!ifs.is_open()){
-			throw inpargs::FileOpenFailed{ };
+			throw inpopts::FileOpenFailed{ };
 		}
 
 		while(getline(ifs, current_line)){
@@ -891,7 +891,7 @@ namespace inpargs{
 		}
 	}
 
-	void InpArgsClass::printFileOpts(){
+	void InpOptsClass::printFileOpts(){
 		cout << "Options/arguments provided from the input file:\n";
 		cout << "\tOPTION\t\tARGUMENTS\n";
 		for (unsigned int it = 0; it < fileArgs.size(); ++it){

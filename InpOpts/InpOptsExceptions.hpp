@@ -4,7 +4,7 @@
 #include <exception>
 #include <string>
 
-namespace inpargs {
+namespace inpopts {
 	struct  BadType{ };
 	struct 	BadPrioritySpec{ };
 	struct 	FileOpenFailed{ };

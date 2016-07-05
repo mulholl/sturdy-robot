@@ -4,7 +4,7 @@
 
 #include <iostream>
 #include <typeinfo>
-#include "InpArgs.hpp"
+#include "InpOpts.hpp"
 
 using namespace std;
 
@@ -15,7 +15,7 @@ int main(int argc, char *argv[]){
 	vector< vector<int> > M;
 	vector<string> args;
 
-	inpargs::InpArgsClass IA(argc, argv);
+	inpopts::InpOptsClass IA(argc, argv);
 
 	vector<string> vals;
 	int testint = 10;
@@ -26,9 +26,9 @@ int main(int argc, char *argv[]){
 
 	vals.push_back("Hi\n");
 
-	inpargs::value<int> test1 = inpargs::value<int>(testint);
-	inpargs::value<string> test2 = inpargs::value<string>(vals);
-	inpargs::value<bool> test3 = inpargs::value<bool>(testbool);
+	inpopts::value<int> test1 = inpopts::value<int>(testint);
+	inpopts::value<string> test2 = inpopts::value<string>(vals);
+	inpopts::value<bool> test3 = inpopts::value<bool>(testbool);
 
 	IA.addOpt('h', "help", "Print this help message", test1);
 
@@ -45,7 +45,7 @@ int main(int argc, char *argv[]){
 	try {
 		IA.UnrecognizedOpts();
 	}
-	catch (inpargs::UnrecOpts UO){
+	catch (inpopts::UnrecOpts UO){
 		cout << UO.what();
 	}
 	

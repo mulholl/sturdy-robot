@@ -9,8 +9,8 @@
 #include <cctype>
 #include <fstream>
 #include <locale>
-#include "InpArgsExceptions.hpp"
-#include "InpArgsValue.hpp"
+#include "InpOptsExceptions.hpp"
+#include "InpOptsValue.hpp"
 
 #define INP_ARG_CMD_ONLY 1
 #define INP_ARG_FILE_ONLY 2
@@ -18,8 +18,8 @@
 #define INP_ARG_FILE_PRIORITY 4
 #define INP_ARG_EQUAL_PRIORITY 5
 
-namespace inpargs{
-	class InpArgsClass{
+namespace inpopts{
+	class InpOptsClass{
 		private:
 			std::vector< std::tuple<char, std::string, std::string, int, bool, int, bool> > validArgList;
 			std::vector<unsigned int> optInds;
@@ -67,7 +67,7 @@ namespace inpargs{
 			/* This template catches other types that cannot currently be converted and throws an exception */
 			template <typename T>
 			static void convert(const std::vector<std::string> &argsAsStrings, std::vector<T> &argsAsCorrectType){
-					throw inpargs::CannotConvert{ };
+					throw inpopts::CannotConvert{ };
 			}
 
 			static std::string strToUpper(const std::string);
@@ -82,7 +82,7 @@ namespace inpargs{
 
 				/* First, check that T is a type that we can deal with */
 				if ((typeid(T) != typeid(unsigned int)) &&(typeid(T) != typeid(int)) && (typeid(T) != typeid(float)) && (typeid(T) != typeid(double)) && (typeid(T) != typeid(bool)) && (typeid(T) != typeid(char)) && (typeid(T) != typeid(std::string))){
-					throw inpargs::BadType{ };
+					throw inpopts::BadType{ };
 				}
 
 				/* Add to the list of valid arguments */
@@ -129,9 +129,9 @@ namespace inpargs{
 			std::string Priority();
 			void UnrecognizedOpts(std::string &);
 			std::string UnrecognizedOpts();
-			InpArgsClass(const int, char**);
-			InpArgsClass(const int, char**, const std::string, std::string);
-			InpArgsClass(const std::string);
+			InpOptsClass(const int, char**);
+			InpOptsClass(const int, char**, const std::string, std::string);
+			InpOptsClass(const std::string);
 	};
 }
 
