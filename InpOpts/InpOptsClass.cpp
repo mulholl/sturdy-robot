@@ -163,9 +163,9 @@ namespace inpopts{
 
 		unsigned int l = 0;
 
-		for (vector<string>::iterator it1 = cmdOpts.begin(); it1 < cmdOpts.end(); ++it1){
-			cout << distance(cmdOpts.begin(), it1) << ": " << *it1 << endl;
-		}
+		// for (vector<string>::iterator it1 = cmdOpts.begin(); it1 < cmdOpts.end(); ++it1){
+			// cout << distance(cmdOpts.begin(), it1) << ": " << *it1 << endl;
+		// }
 
 		for (vector<string>::iterator it1 = cmdOpts.begin(); it1 < cmdOpts.end(); ++it1){
 
@@ -208,22 +208,33 @@ namespace inpopts{
 		string argInfo;
 		string valInfo;
 
-		const unsigned int alignTo = 20;
+		const int alignToS = 20;
+		int alignToL = 0;;
+
+		for (vector< tuple<char, string, string, int, bool, int, bool> >::iterator it = validArgList.begin(); it != validArgList.end(); ++it){
+			int tmp2 = get<1>(*it).size();
+			alignToL =  (tmp2 > alignToL) ? tmp2 : alignToL;
+		}
+
+		alignToL = alignToL + 15;
+
+		// std::cout << "alignToL = " << alignToL << std::endl;
 
 		for (vector< tuple<char, string, string, int, bool, int, bool> >::iterator it = validArgList.begin(); it != validArgList.end(); ++it){
 			opt_long = "";
 			opt_long = opt_long + "  -" + get<0>(*it) + "    --" + get<1>(*it);
-			unsigned int tempSize = opt_long.size();
+			int tempSize = opt_long.size();
 
-			for (unsigned int it = 0; it < alignTo - tempSize; ++it){
+			for (int it = 0; it < alignToL - tempSize; ++it){
 				opt_long = opt_long + " ";
 			} 
+			// std::cout << "opt_long = " << std::endl << opt_long << "|" << std::endl;
 
 			opt_long = opt_long + get<2>(*it) + "\n";
 
 			argInfo = "";
 
-			for (unsigned int it = 0; it < alignTo; ++it){
+			for (int it = 0; it < alignToL; ++it){
 				argInfo = argInfo + " ";
 			} 
 
@@ -402,7 +413,11 @@ namespace inpopts{
 
 		mode = INP_ARG_FILE_ONLY;
 
+		// cout << "calling gatherFileOpts()" << endl;
+
 		gatherFileOpts();
+
+		// cout << "calling printFileOpts()" << endl;
 		// printFileOpts();
 
 	}
@@ -437,9 +452,9 @@ namespace inpopts{
 			/* Check if this string is an option - i.e., if it begins with '-' */
 			if (isCmdOption(current, temp_bool)){
 				unsigned int i = temp_bool ? 2 : 1;
-				cout << "current = " << current << " | temp_bool = " << temp_bool << endl;
+				// cout << "current = " << current << " | temp_bool = " << temp_bool << endl;
 				current.erase(current.begin(), current.begin()+i);
-				cout << "current = " << current << endl;
+				// cout << "current = " << current << endl;
 				if (!temp_bool){
 					for (string::iterator it2 = current.begin(); it2 < current.end(); ++it2){
 						char current_char = *it2;
@@ -830,6 +845,7 @@ namespace inpopts{
 	}
 
 	void InpOptsClass::gatherFileOpts(){
+		bool header = false;
 		// optInds.resize(0);
 		fileNumArgs.resize(0);
 		fileOpts.resize(0);
@@ -869,6 +885,7 @@ namespace inpopts{
 			else if (current_line[0] == '['){
 				ind = current_line.find(']');
 				category = current_line.substr(1, ind - 1);
+				header = true;
 				// cout << "category is [" << category << "]" << endl;
 			}
 			/* Otherwise, we consider this line to specify an option. We check for an equals sign and let everything before it (excluding any trailing whitespace) be the option */
@@ -877,7 +894,7 @@ namespace inpopts{
 				ind = current_line.find('=');
 
 				/* We assume that everything that comes before this equals sign is the option, possibly with some whitespace at the end that we'll trim... */
-				option = current_line.substr(0, ind - 1);
+				option = current_line.substr(0, ind);
 
 				// cout << "option = " << option << endl;
 				trimRWSpace(option);
@@ -885,7 +902,12 @@ namespace inpopts{
 				// cout << "option = " << option << endl;
 
 				/* Now we store the category and option */
-				fileOpts.push_back(category + '.' + option);
+				if (header){
+					fileOpts.push_back(category + '.' + option);
+				}
+				else {
+					fileOpts.push_back(option);
+				}
 				recognizedFileOpts.push_back(false);
 
 				/* If the option contains more than one character, consider it a long option */

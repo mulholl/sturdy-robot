@@ -729,7 +729,10 @@ namespace inpopts{
 					return validateStringList(inp);
 				}
 				else {
-					return false;
+					/* If we get here, no restrictions have been specified, so there
+					 * is no test to pass, i.e., the input is always considered valid
+					 */
+					return true;
 				}
 			}
 
