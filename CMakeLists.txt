@@ -4,10 +4,16 @@ project (InpOptsTest)
 # We will use INP_OPTS_TEST_LIBS for the libraries needed for FileMatrixTest.cpp
 
 # Add the directory for our input argument parsing library
-include_directories("${PROJECT_SOURCE_DIR}/InpOpts/")
+set (INP_OPTS_SOURCE_DIR "${PROJECT_SOURCE_DIR}/InpOpts/")
+include_directories(${INP_OPTS_SOURCE_DIR})
 add_subdirectory(InpOpts)
 set (EXTRA_LIBS ${EXTRA_LIBS} InpOpts)
 set (INP_OPTS_TEST_LIBS ${INP_OPTS_TEST_LIBS} InpOpts)
+
+# add the binary tree to the search path for include files
+# so that we will find configured header files
+include_directories("${PROJECT_BINARY_DIR}")
+#include_directories("${PROJECT_BINARY_DIR}/InpOpts/")
 
 # Add the executables
 

@@ -1,6 +1,6 @@
-#ifndef __STDC_IEC_559__
-#error "This program requires IEEE 754 floating point support - this can be disabled by comment out the check for __STD_IEC_559__ in the main .cpp file" 
-#endif
+// #ifndef __STDC_IEC_559__
+// #error "This program requires IEEE 754 floating point support - this can be disabled by commenting out the check for __STD_IEC_559__ in the main .cpp file" 
+// #endif
 
 #include <iostream>
 #include <typeinfo>
@@ -20,6 +20,8 @@ int main(int argc, char *argv[]){
 	vector<string> vals;
 	int testint = 10;
 	bool testbool = true;
+
+	cout << "The InpOpts version is " << inpopts::Version() << endl;
 
 	// cout << "typeid(vals).name() = " << typeid(vals).name() << endl;
 	// cout << "typeid(&vals).name() = " << typeid(&vals).name() << endl;

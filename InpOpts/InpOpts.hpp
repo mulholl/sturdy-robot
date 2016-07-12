@@ -8,4 +8,10 @@
 #include "InpOptsExceptions.hpp"
 #include "InpOptsValue.hpp"
 
+#include "sturdy-robot-config.hpp"
+
+namespace inpopts{
+	std::string Version();
+}
+
 #endif

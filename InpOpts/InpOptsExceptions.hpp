@@ -3,6 +3,7 @@
 
 #include <exception>
 #include <string>
+#include <sstream>
 
 namespace inpopts {
 	struct  BadType{ };
@@ -112,7 +113,7 @@ namespace inpopts {
 				}
 				return msg.c_str();
 			}
-			unsigned int min, max, actual;
+			int min, max, actual;
 		private:
 			std::string optName;
 	};
@@ -127,7 +128,9 @@ namespace inpopts {
 					optName = "--" + str;
 				}
 				else {
-					optName = "-" + c + '\0';
+					std::stringstream ss;
+					ss << "-" << c << '\0';
+					optName = ss.str();
 				}
 			}
 			virtual const char* what() const throw(){
@@ -135,7 +138,7 @@ namespace inpopts {
 				return msg.c_str();
 			}
 		private:
-			std::string optName;	
+			std::string optName;
 	};
 
 	class MultFileSpec{
@@ -145,7 +148,9 @@ namespace inpopts {
 					optName = "--" + str;
 				}
 				else {
-					optName = "-" + c + '\0';
+					std::stringstream ss;
+					ss << "-" << c << '\0';
+					optName = ss.str();
 				}
 			}
 			virtual const char* what() const throw(){

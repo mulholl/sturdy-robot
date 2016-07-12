@@ -339,7 +339,7 @@ namespace inpopts{
 			// 	return *this;		
 			// }		
 
-			value& numArgs(unsigned int n_exact){
+			value& numArgs(int n_exact){
 				exactNum = n_exact;
 				minArgs = n_exact;
 				maxArgs = n_exact;
@@ -369,7 +369,7 @@ namespace inpopts{
 			// 	return *this;
 			// }			
 
-			value& numArgs(unsigned int n_min, unsigned int n_max){
+			value& numArgs(int n_min, int n_max){
 				minArgs = n_min;
 				maxArgs = n_max;
 				
@@ -437,7 +437,7 @@ namespace inpopts{
 			// 	return *this;
 			// }	
 
-			value& minNumArgs(unsigned int n_min){
+			value& minNumArgs(int n_min){
 				minArgs = n_min;
 
 				if (minArgs >= 0){
@@ -503,7 +503,7 @@ namespace inpopts{
 			// 	return *this;
 			// }
 
-			value& maxNumArgs(unsigned int n_max){
+			value& maxNumArgs(int n_max){
 				maxArgs = n_max;
 
 				if (maxArgs >= 0){
@@ -708,6 +708,8 @@ namespace inpopts{
 						return false;
 					}
 				}
+
+				return true;
 			}
 
 			/* Functions for validating arguments - these only check the values of the arguments and assume that any other
@@ -725,6 +727,9 @@ namespace inpopts{
 				}
 				else if (valListSpec){
 					return validateStringList(inp);
+				}
+				else {
+					return false;
 				}
 			}
 
@@ -810,7 +815,7 @@ namespace inpopts{
 				bool valid = true; // TRUE if the element of inp that has most recently been checked was valid
 				bool all_valid = true; // TRUE if all of the elements of inp that have been checked so far have been valid
 
-				if (typeid(std::string) == typeid(std::string)){
+				// if (typeid(std::string) == typeid(std::string)){
 					for (typename std::vector<std::string>::iterator it1 = inp.begin(); it1 < inp.end(); ++it1){
 						valid = false;
 						for (typename std::vector<std::string>::iterator it2 = vecVarRef.begin(); it2 < vecVarRef.end(); ++it2){
@@ -832,7 +837,7 @@ namespace inpopts{
 
 					/* If we reach this point, all inputs have been valid */
 					return true;					
-				}
+				// }
 			}
 
 			static std::string strToUpper(std::string str){

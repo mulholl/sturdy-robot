@@ -67,7 +67,7 @@ namespace inpopts{
 		// cout << "mode = " << mode <<endl;
 		if (updateCounters){
 			if (mode == INP_ARG_CMD_ONLY){
-				if (ret = checkCmdOpt(opt_short, opt_long, val)){
+				if ((ret = checkCmdOpt(opt_short, opt_long, val))){
 					if (ret == 1){
 						++numRecognizedCmdOpts;
 					}
@@ -77,7 +77,7 @@ namespace inpopts{
 				}
 			}
 			else if (mode == INP_ARG_CMD_PRIORITY){
-				if(ret = checkCmdOpt(opt_short, opt_long, val)){
+				if((ret = checkCmdOpt(opt_short, opt_long, val))){
 					if (ret == 1){
 						++numRecognizedCmdOpts;
 					}
@@ -85,7 +85,7 @@ namespace inpopts{
 						throw inpopts::MultCmdSpec(opt_short, opt_long);
 					}
 				}
-				else if (ret = checkFileOpt(opt_short, opt_long, val)){
+				else if ((ret = checkFileOpt(opt_short, opt_long, val))){
 					if (ret == 1){
 						++numRecognizedFileOpts;
 					}
@@ -95,7 +95,7 @@ namespace inpopts{
 				}
 			}
 			else if (mode == INP_ARG_FILE_ONLY){
-				if (ret = checkFileOpt(opt_short, opt_long, val)){
+				if ((ret = checkFileOpt(opt_short, opt_long, val))){
 					if (ret == 1){
 						++numRecognizedFileOpts;
 					}
@@ -105,7 +105,7 @@ namespace inpopts{
 				}
 			}
 			else if (mode == INP_ARG_FILE_PRIORITY){
-				if (ret = checkFileOpt(opt_short, opt_long, val)){
+				if ((ret = checkFileOpt(opt_short, opt_long, val))){
 					if (ret == 1){
 						++numRecognizedFileOpts;
 					}
@@ -113,7 +113,7 @@ namespace inpopts{
 						throw inpopts::MultFileSpec(opt_short, opt_long);
 					}
 				}
-				else if (ret = checkCmdOpt(opt_short, opt_long, val)){
+				else if ((ret = checkCmdOpt(opt_short, opt_long, val))){
 					if (ret == 1){
 						++numRecognizedCmdOpts;
 					}
@@ -761,25 +761,43 @@ namespace inpopts{
 		str = str.substr(it, str_len - it);
 	}
 
+	// /* trimLWSpace(string &str) trims any whitespace at the end of str */
+	// void InpOptsClass::trimRWSpace(string &str){
+	// 	locale loc;
+	// 	unsigned int str_len = str.length();
+	// 	int it;
+
+	// 	// cout << "str = " << str << endl;
+
+	// 	for (it = str_len - 1; it >= 0; --it){
+	// 		// cout << "\tstr[" << it << "] = " << str[it] << endl;
+	// 		if (!isspace(str[it], loc))
+	// 			break;
+	// 	}
+
+	// 	str = str.substr(0, it + 1);
+
+	// 	// cout << "str went from " << str_len << " to " << str.length() << " characters" << endl;
+	// 	// cout << "str is now = " << str << endl;
+	// }
+
 	/* trimLWSpace(string &str) trims any whitespace at the end of str */
 	void InpOptsClass::trimRWSpace(string &str){
 		locale loc;
 		unsigned int str_len = str.length();
 		unsigned int it;
 
-		// cout << "str = " << str << endl;
+		if (str_len == 0){
+			return;
+		}
 
-		for (it = str_len - 1; it >= 0; --it){
-			// cout << "\tstr[" << it << "] = " << str[it] << endl;
-			if (!isspace(str[it], loc))
+		for (it = str_len; it > 0; --it){
+			if (!isspace(str[it-1], loc))
 				break;
 		}
 
 		str = str.substr(0, it + 1);
-
-		// cout << "str went from " << str_len << " to " << str.length() << " characters" << endl;
-		// cout << "str is now = " << str << endl;
-	}
+	}	
 
 	/* splitAtFirstWs(string &str1) splits str1 in two at the first whitespace character. The return value is everything up to this character, str1 is modified to be everything after this character. Leading whitespace is trimmed from str1 before and after the split */
 	string InpOptsClass::splitAtFirstWS(string &str1){

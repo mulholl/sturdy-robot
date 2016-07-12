@@ -43,7 +43,7 @@ namespace inpopts{
 				return *this;
 			}	
 
-			value& numArgs(unsigned int n_exact){
+			value& numArgs(int n_exact){
 				exactNum = n_exact;
 				minArgs = n_exact;
 				maxArgs = n_exact;
@@ -58,7 +58,7 @@ namespace inpopts{
 				return *this;
 			}
 
-			value& numArgs(unsigned int n_min, unsigned int n_max){
+			value& numArgs(int n_min, int n_max){
 				minArgs = n_min;
 				maxArgs = n_max;
 				
@@ -92,7 +92,7 @@ namespace inpopts{
 				return *this;
 			}
 
-			value& minNumArgs(unsigned int n_min){
+			value& minNumArgs(int n_min){
 				minArgs = n_min;
 
 				if (minArgs >= 0){
@@ -125,7 +125,7 @@ namespace inpopts{
 				return *this;
 			}			
 
-			value& maxNumArgs(unsigned int n_max){
+			value& maxNumArgs(int n_max){
 				maxArgs = n_max;
 
 				if (maxArgs >= 0){
@@ -265,6 +265,8 @@ namespace inpopts{
 						return false;
 					}
 				}
+
+				return true;
 			}
 
 			/* Functions for validating arguments - these only check the values of the arguments and assume that any other
