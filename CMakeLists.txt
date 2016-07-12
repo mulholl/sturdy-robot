@@ -13,7 +13,7 @@ set (INP_OPTS_TEST_LIBS ${INP_OPTS_TEST_LIBS} InpOpts)
 # add the binary tree to the search path for include files
 # so that we will find configured header files
 include_directories("${PROJECT_BINARY_DIR}")
-#include_directories("${PROJECT_BINARY_DIR}/InpOpts/")
+include_directories("${PROJECT_BINARY_DIR}/InpOpts/")
 
 # Add the executables
 
