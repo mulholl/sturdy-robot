@@ -122,7 +122,7 @@ namespace inpopts{
 				addOpt(opt_short, opt_long, help_text, val);
 			}
 
-			template <typename T>
+			// template <typename T>
 			void addOpt(const char opt_short, const std::string opt_long, const std::string help_text){
 				bool tmp;
 				value<bool> val(tmp);
