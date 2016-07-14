@@ -16,7 +16,7 @@ namespace inpopts{
 			T maxVal; // Maximum allowed value
 			std::vector<T> valList; // Vector of allowed values
 			T defVal; // Default value
-			bool defValBool; // Boolean default value - only used when T is of type bool
+			// bool defValBool; // Boolean default value - only used when T is of type bool
 
 			/* 2. Boolean variables indicating whether the variables in (1) above have been specified or not */
 			bool rangeSpec; // TRUE if a range of values has been specified - maxSpec and minSpec should always be TRUE if rangeSpec is TRUE
@@ -583,24 +583,29 @@ namespace inpopts{
 
 				int nArgsIn = inp.size();
 
+				if (vecInUse){
+					std::cout << "vecInUse = TRUE" << std::endl << std::endl;
+				}
+
 				/* If the vector inp is empty but the type of T is bool, then this is a boolean switch. If there
 				 * is a default value, we set the value to be the opposite, otherwise we set it to be true 
 				 */
-				if (typeBool){
-					if (nArgsIn == 0){
-						if (defSpec){
-							varRef = defValBool ? false : true;
-							// varRef = !defVal;
-						}
-						else {
-							varRef = true;
-						}
-						return true;
-					}
-				}
+				// if (typeBool){
+				// 	if (nArgsIn == 0){
+				// 		if (defSpec){
+				// 			varRef = defValBool ? false : true;
+				// 			// varRef = !defVal;
+				// 		}
+				// 		else {
+				// 			varRef = true;
+				// 		}
+				// 		return true;
+				// 	}
+				// }
 
 				/* Check that an acceptable number of arguments has been provided */
 				if (!validateNumArgs(nArgsIn)){
+					std::cout << "Failed validateNumArgs" << std::endl;
 					return false;
 				}
 
@@ -704,13 +709,13 @@ namespace inpopts{
 				}
 
 				if (minArgsSpec){
-					if (nArgsIn < minArgsSpec){
+					if (nArgsIn < minArgs){
 						return false;
 					}
 				}
 
 				if (maxArgsSpec){
-					if (nArgsIn > maxArgsSpec){
+					if (nArgsIn > maxArgs){
 						return false;
 					}
 				}
