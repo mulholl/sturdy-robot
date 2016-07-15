@@ -583,9 +583,9 @@ namespace inpopts{
 
 				int nArgsIn = inp.size();
 
-				if (vecInUse){
-					std::cout << "vecInUse = TRUE" << std::endl << std::endl;
-				}
+				// if (vecInUse){
+				// 	std::cout << "vecInUse = TRUE" << std::endl << std::endl;
+				// }
 
 				/* If the vector inp is empty but the type of T is bool, then this is a boolean switch. If there
 				 * is a default value, we set the value to be the opposite, otherwise we set it to be true 
@@ -808,7 +808,7 @@ namespace inpopts{
 				bool valid; // TRUE if the element of inp that has most recently been checked was valid
 
 				valid = false;
-				for (typename std::vector<T>::iterator it2 = vecVarRef.begin(); it2 < vecVarRef.end(); ++it2){
+				for (typename std::vector<T>::iterator it2 = valList.begin(); it2 < vecVarRef.end(); ++it2){
 					/* If inp == *it2, inp is a valid input */
 					if (inp == *it2){
 						valid = true;
@@ -831,7 +831,7 @@ namespace inpopts{
 
 				for (typename std::vector<T>::iterator it1 = inp.begin(); it1 < inp.end(); ++it1){
 					valid = false;
-					for (typename std::vector<T>::iterator it2 = vecVarRef.begin(); it2 < vecVarRef.end(); ++it2){
+					for (typename std::vector<T>::iterator it2 = valList.begin(); it2 < vecVarRef.end(); ++it2){
 						/* If *it1 == *it2, the current element of inp is a valid input, we can move onto the next element of inp */
 						if (*it1 == *it2){
 							valid = true;

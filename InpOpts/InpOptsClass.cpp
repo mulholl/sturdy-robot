@@ -346,6 +346,10 @@ namespace inpopts{
 
 		return str;
 	}
+	
+	std::string InpOptsClass::LastAttemptedAdd(){
+		return lastAdded;
+	}
 
 	InpOptsClass::InpOptsClass(const int arg_c, char** arg_v){
 		argc = arg_c;
