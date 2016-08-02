@@ -40,7 +40,7 @@ int main(int argc, char *argv[]){
 
 	if (IA.Used('h') || IA.Used("help")){
 		cout << "Printing a list of valid options\n";
-		cout << IA.listArgs() << endl;
+		cout << IA.listOpts() << endl;
 	}
 
 	/* Check for any user-specified options that are not recognized */
